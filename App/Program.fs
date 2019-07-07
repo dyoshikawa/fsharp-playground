@@ -2,8 +2,11 @@
 
 module Procedure =
     let procedure n d xList =
-        for _i in 1 .. n do
-            let a = []
+        let mutable res = 0
+        for i1 in 0 .. n-1 do
+            for i2 in 0 .. d-1 dofi
+                let a = xList.[i1].[i2]
+        res
 
 [<EntryPoint>]
 let main _argv =
