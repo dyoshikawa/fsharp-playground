@@ -1,23 +1,16 @@
 ﻿open System
 
-module Procedure =
-    let procedure n d xList =
-        let mutable res = 0
-        for i1 in 0 .. n-1 do
-            for i2 in 0 .. d-1 do
-                let a = xList.[i1].[i2]
-        res
-
 [<EntryPoint>]
 let main _argv =
-    let inputFirstLineNumbers = stdin.ReadLine().Split(' ') |> Array.map int
-    let n = inputFirstLineNumbers.[0]
-    let d = inputFirstLineNumbers.[1]
-    let mutable xList : int list list = []
-    for _i in 1 .. n do
-        let a = [stdin.ReadLine().Split(' ') |> Array.map int |> Array.toList]
-        xList <- xList @ a
-        
-    Procedure.procedure n d xList |> printfn "%d"
+    let a = stdin.ReadLine() |> int
+    let b = stdin.ReadLine() |> int
+    let c = stdin.ReadLine() |> int
+    let x = stdin.ReadLine() |> int
+
+    [for ia in [0 .. a] do
+        for ib in [0 .. b] do
+            for ic in [0 .. c] do
+                yield ia * 500 + ib * 100 + ic * 50]
+        |> List.sumBy (fun y -> if y = x then 1 else 0)
+        |> printfn "%d"           
     0
- 
