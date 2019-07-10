@@ -1,6 +1,7 @@
 namespace App.Tests
 
 open NUnit.Framework
+open App.Main
 
 [<TestClass>]
 type TestClass () =
