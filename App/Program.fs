@@ -30,21 +30,22 @@ module Main =
         let mutable duplicateCount = 0
         let rec search graph goal count (checkedList : (int * int) list)
                 (queue : Queue<int * int>) : int =
-            printfn "%A" queue
-            printfn "%d" count  
+            // printfn "%A" queue
+            // printfn "%d" count  
             let dequeued = queue.Dequeue()
             let addedCheckedList = dequeued :: checkedList
             match dequeued with
             | _ when dequeued = goal -> count
             | _ when List.contains dequeued checkedList ->
                 search graph goal count addedCheckedList queue
-            | _  ->
+            | _ when queue.Count = 0 ->
                 (fun (graph : Dictionary<int * int, (int * int) list>) (queue : Queue<int * int>) (dequeued : int * int) ->
                 for item in graph.[dequeued] do
                     if not (List.contains item addedCheckedList) then
                         queue.Enqueue(item)                   
                 queue) graph queue dequeued
                 |> search graph goal (count + 1) addedCheckedList
+            | _ -> search graph goal count addedCheckedList queue
         search graph goal 0 [] queue
 
     [<EntryPoint>]
