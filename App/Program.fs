@@ -27,20 +27,24 @@ module Main =
         let queue = new Queue<int * int>()
         let graph = createGraph maze
         queue.Enqueue(start)
-        let rec search graph goal count (checkedList : (int * int) list) (queue : Queue<int * int>) : int =
+        let mutable duplicateCount = 0
+        let rec search graph goal count (checkedList : (int * int) list)
+                (queue : Queue<int * int>) : int =
+            printfn "%A" queue
+            printfn "%d" count  
             let dequeued = queue.Dequeue()
             let addedCheckedList = dequeued :: checkedList
             match dequeued with
             | _ when dequeued = goal -> count
             | _ when List.contains dequeued checkedList ->
-                search graph goal (count + 1) addedCheckedList queue
-            | _ ->
+                search graph goal count addedCheckedList queue
+            | _  ->
                 (fun (graph : Dictionary<int * int, (int * int) list>) (queue : Queue<int * int>) (dequeued : int * int) ->
                 for item in graph.[dequeued] do
-                    queue.Enqueue(item)
+                    if not (List.contains item addedCheckedList) then
+                        queue.Enqueue(item)                   
                 queue) graph queue dequeued
                 |> search graph goal (count + 1) addedCheckedList
-        
         search graph goal 0 [] queue
 
     [<EntryPoint>]
@@ -51,16 +55,10 @@ module Main =
             |> Array.toList
 
         let R = inputNums1.Head
-
-        let inputNums2 =
-            stdin.ReadLine().Split(' ')
-            |> Array.map int        
-        let start = (inputNums2.[0], inputNums2.[1])
-
-        let inputNums3 =
-            stdin.ReadLine().Split(' ')
-            |> Array.map int
-        let goal = (inputNums3.[0], inputNums3.[1])
+        let inputNums2 = stdin.ReadLine().Split(' ') |> Array.map int
+        let start = (inputNums2.[0] - 1, inputNums2.[1] - 1)
+        let inputNums3 = stdin.ReadLine().Split(' ') |> Array.map int
+        let goal = (inputNums3.[0] - 1, inputNums3.[1] - 1)
 
         let rec readMaze (count : int) (maze : string [] []) =
             match count with
@@ -70,7 +68,6 @@ module Main =
                     [| (stdin.ReadLine().ToCharArray() |> Array.map string) |]
                 |> readMaze (count - 1)
 
-        let maze = readMaze R [|[||]|]
-
+        let maze = readMaze R [||]
         procedure maze start goal |> printfn "%d"
         0
