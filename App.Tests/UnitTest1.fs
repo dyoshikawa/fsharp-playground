@@ -12,6 +12,7 @@ type TestClass () =
 
     [<Test>]
     member this.Test1 () =
-        let a = createGraph [|[|".."|]|]
-        printfn "%A" a
-        Assert.True((a = a))
+        let result = createGraph [|[|"."; "."|]|]
+        Assert.AreEqual([(0,1)], result.[(0,0)])
+        Assert.AreEqual([(0,0)], result.[(0,1)])
+        
