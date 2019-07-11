@@ -38,14 +38,13 @@ module Main =
             | _ when dequeued = goal -> count
             | _ when List.contains dequeued checkedList ->
                 search graph goal count addedCheckedList queue
-            | _ when queue.Count = 0 ->
+            | _ ->
                 (fun (graph : Dictionary<int * int, (int * int) list>) (queue : Queue<int * int>) (dequeued : int * int) ->
                 for item in graph.[dequeued] do
                     if not (List.contains item addedCheckedList) then
                         queue.Enqueue(item)                   
                 queue) graph queue dequeued
                 |> search graph goal (count + 1) addedCheckedList
-            | _ -> search graph goal count addedCheckedList queue
         search graph goal 0 [] queue
 
     [<EntryPoint>]
