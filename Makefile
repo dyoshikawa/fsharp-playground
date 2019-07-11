@@ -3,3 +3,6 @@ start:
 
 test:
 	dotnet test
+
+format:
+	fantomas ./**/
