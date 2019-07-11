@@ -12,4 +12,6 @@ type TestClass () =
 
     [<Test>]
     member this.Test1 () =
-        Assert.Pass()
+        let a = createGraph [|[|".."|]|]
+        printfn "%A" a
+        Assert.True((a = a))
