@@ -26,26 +26,23 @@ module Main =
     let procedure (maze : string [] []) (start : int * int) (goal : int * int) : int =
         let queue = new Queue<int * int>()
         let graph = createGraph maze
+        let mutable checkedList = []
         queue.Enqueue(start)
-        let mutable duplicateCount = 0
-        let rec search graph goal count (checkedList : (int * int) list)
-                (queue : Queue<int * int>) : int =
-            // printfn "%A" queue
-            // printfn "%d" count  
-            let dequeued = queue.Dequeue()
-            let addedCheckedList = dequeued :: checkedList
-            match dequeued with
-            | _ when dequeued = goal -> count
-            | _ when List.contains dequeued checkedList ->
-                search graph goal count addedCheckedList queue
-            | _ ->
-                (fun (graph : Dictionary<int * int, (int * int) list>) (queue : Queue<int * int>) (dequeued : int * int) ->
-                for item in graph.[dequeued] do
-                    if not (List.contains item addedCheckedList) then
-                        queue.Enqueue(item)                   
-                queue) graph queue dequeued
-                |> search graph goal (count + 1) addedCheckedList
-        search graph goal 0 [] queue
+        let mutable breakFlg = false
+        let dict = Dictionary<(int * int), ((int * int) * int)>()
+        dict.Add(start, ((-1, -1), 0))
+        while not breakFlg && queue.Count > 0 do
+            let target = queue.Dequeue()
+            if not (List.contains target checkedList) then
+                if target = goal then
+                    breakFlg <- true
+                for item in graph.[target] do
+                    queue.Enqueue(item)
+                    let tryGetResult = dict.TryGetValue(item)
+                    if not (fst tryGetResult) then
+                        dict.Add(item, (target, snd dict.[target] + 1))
+                checkedList <- target :: checkedList
+        snd dict.[goal]
 
     [<EntryPoint>]
     let main _argv : int =
